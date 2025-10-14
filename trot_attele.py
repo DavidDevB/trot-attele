@@ -3,152 +3,108 @@
 
 import random
 
+
+""" Retourne le nombre de chevaux à faire participer (entrés par le joueur) """
 def get_number_of_horses():
     return input("Choose the number of horses for this race: ")
 
 
+""" Retourne le type de la course (entré par le joueur) """
 def get_race_type():
     return input("Choose race type between trifecta, quartet, quintet: ")
 
 
+""" Retourne une liste de tous les chevaux participants (dictionnaires)"""
 def get_horses_specs():
     horses = []
     for i in range(int(get_number_of_horses())):
         horses.append({"number": i + 1, "dist": 2400, "speed": 0})
     return horses
 
+
+""" Fonction principale faisant fonctionner la course"""
 def launch_race():
     horses = get_horses_specs()
+    race_type = get_race_type()
     race_types = {"trifecta": 3, "quartet": 4, "quintet": 5}
     winners = []
 
-    while all("dist" in horse for horse  in horses) > 0:
+    # Boucle while permettant de boucler jusqu'à qu'il y est le nombre de gagnants indiqués par le type de course,
+    # et jusqu'à qu'il n'y ait plus de cheval avec une distance supérieure à zéro.
+    while len(winners) < race_types[race_type] and any(horse["dist"] > 0 for horse in horses):
         for i in range(len(horses)):
-            actual_speed = horses[i]["speed"]
             dice = random.choice(range(1, 7))
-            dist = horses[i]["dist"]
 
-            match actual_speed:
+            # Switch match qui modifie la vitesse des chevaux selon le lancer de dé.
+            match horses[i]["speed"]:
                 case 0:
-                    match dice:
-                        case 1:
-                            continue
-                        case 2:
-                            actual_speed += 1
-                        case 3:
-                            actual_speed += 1
-                        case 4:
-                            actual_speed += 1
-                        case 5:
-                            actual_speed += 2
-                        case 6:
-                            actual_speed += 2
+                    if dice in [2, 3, 4]:
+                        horses[i]["speed"] += 1
+                    elif dice in [5, 6]:
+                        horses[i]["speed"] += 2
                 case 1:
-                    match dice:
-                        case 1:
-                            continue
-                        case 2:
-                            continue
-                        case 3:
-                            actual_speed += 1
-                        case 4:
-                            actual_speed += 1
-                        case 5:
-                            actual_speed += 1
-                        case 6:
-                            actual_speed += 2
+                    if dice in [3, 4, 5]:
+                        horses[i]["speed"] += 1
+                    elif dice == 6:
+                        horses[i]["speed"] += 2
                 case 2:
-                    match dice:
-                        case 1:
-                            continue
-                        case 2:
-                            continue
-                        case 3:
-                            actual_speed += 1
-                        case 4:
-                            actual_speed += 1
-                        case 5:
-                            actual_speed += 1
-                        case 6:
-                            actual_speed += 2
+                    if dice in [3, 4, 5]:
+                        horses[i]["speed"] += 1
+                    elif dice == 6:
+                        horses[i]["speed"] += 2
                 case 3:
-                    match dice:
-                        case 1:
-                            actual_speed -= 1
-                        case 2:
-                            continue
-                        case 3:
-                            continue
-                        case 4:
-                            actual_speed += 1
-                        case 5:
-                            actual_speed += 1
-                        case 6:
-                            actual_speed += 1
+                    if dice == 1:
+                        horses[i]["speed"] -= 1
+                    elif dice in [4, 5, 6]:
+                        horses[i]["speed"] += 1
                 case 4:
-                    match dice:
-                        case 1:
-                            actual_speed -= 1
-                        case 2:
-                            continue
-                        case 3:
-                            continue
-                        case 4:
-                            continue
-                        case 5:
-                            actual_speed += 1
-                        case 6:
-                            actual_speed += 1
+                    if dice == 1:
+                        horses[i]["speed"] -= 1
+                    elif dice in [5, 6]:
+                        horses[i]["speed"] += 1
                 case 5:
-                    match dice:
-                        case 1:
-                            actual_speed -= 2
-                        case 2:
-                            actual_speed -= 1
-                        case 3:
-                            continue
-                        case 4:
-                            continue
-                        case 5:
-                            continue
-                        case 6:
-                            actual_speed += 1
+                    if dice == 1:
+                        horses[i]["speed"] -= 2
+                    elif dice == 2:
+                        horses[i]["speed"] -= 1
+                    elif dice == 6:
+                        horses[i]["speed"] += 1
                 case 6:
-                    match dice:
-                        case 1:
-                            actual_speed -= 2
-                        case 2:
-                            actual_speed -= 1
-                        case 3:
-                            continue
-                        case 4:
-                            continue
-                        case 5:
-                            continue
-                        case 6:
-                            actual_speed = -1
+                    if dice == 1:
+                        horses[i]["speed"] -= 2
+                    elif dice == 2:
+                        horses[i]["speed"] -= 1
+                    elif dice == 6:
+                        horses[i]["speed"] = -1
 
-            match actual_speed:
+            # Switch match qui modifie la distance de chaque cheval selon sa vitesse.
+            match horses[i]["speed"]:
                 case 0:
                     continue
                 case 1:
-                    dist -= 23
+                    horses[i]["dist"] -= 23
                 case 2:
-                    dist -= 46
+                    horses[i]["dist"] -= 46
                 case 3:
-                    dist -= 69
+                    horses[i]["dist"] -= 69
                 case 4:
-                    dist -= 92
+                    horses[i]["dist"] -= 92
                 case 5:
-                    dist -= 115
+                    horses[i]["dist"] -= 115
                 case 6:
-                    dist -= 138
+                    horses[i]["dist"] -= 138
 
-            while len(winners) <= race_types[get_race_type()]:
-                if actual_speed == 0:
+            # Condition de victoire selon si le nombre de vainqueurs dans le tableau winners est inférieur ou supérieur au type de course,
+            # et si le cheval à une distance inférieure ou égale à zéro.
+            if len(winners) < race_types[race_type] and horses[i] not in winners:
+                if horses[i]["dist"] <= 0:
                     winners.append(horses[i])
+                    print(f"{horses[i]['number']} a terminé !")
 
-    print(winners)
+            # Condition qui arrête la boucle si le nombre de gagnants dans le tableau winners
+            # est égal ou supérieur au type de course.
+            if len(winners) >= race_types[race_type]:
+                break
 
 
 if __name__ == "__main__":
