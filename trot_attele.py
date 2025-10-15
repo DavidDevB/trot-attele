@@ -18,7 +18,12 @@ def get_number_of_horses():
     """
     Retourne le nombre de chevaux à faire participer (entrés par le joueur)
     """
-    return input("Choose the number of horses for this race: ")
+    while True:
+        number_of_horses = input("Choose the number of horses between 12 and 20 for this race: ")
+        if number_of_horses.isdigit() and 12 <= int(number_of_horses) <= 20:
+            return number_of_horses
+        else:
+            continue
 
 
 race_types = {"trifecta": 3, "quartet": 4, "quintet": 5}
@@ -31,10 +36,10 @@ def get_race_type():
     """
     while True:
         race_type = input("Choose race type between trifecta, quartet, quintet: ")
-        if race_type not in race_types.keys():
-            print("Must be trifecta, quartet or quintet.")
-            race_type = input("Choose race type between trifecta, quartet, quintet: ")
-        return race_type
+        if race_type  in race_types.keys():
+            return race_type
+        else:
+            continue
 
 
 
