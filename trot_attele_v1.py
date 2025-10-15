@@ -2,12 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import random
-import matplotlib.pyplot as plt
-import numpy as np
-
-np.random.seed(19680801)
-
-fig, ax = plt.subplots()
 
 
 """ 
@@ -50,11 +44,10 @@ def launch_race():
     race_type = get_race_type()
 
     winners = []
-    colors = [f"#{random.randint(0, 0xFFFFFF):06x}" for _ in horses]
 
     """
     Boucle while permettant de boucler jusqu'à qu'il y est le nombre de gagnants indiqués par le type de course,
-    et jusqu'à qu'il n'y ait plus de cheval avec une distance inférieure à 2400.
+    et jusqu'à qu'il n'y ait plus de cheval avec une distance supérieure à zéro.
     """
     while len(winners) < race_types[race_type] and any(horse["dist"] < 2400 for horse in horses):
         for horse in horses[:]:
@@ -125,21 +118,6 @@ def launch_race():
                     horse["dist"] += 138
 
             """
-            Librairie Matplotlib pour rajouter le graphique horizontal
-            """
-            ax.clear()
-            y_pos = np.arange(len(horses))
-            distance = [horse["dist"] for horse in horses]
-            ax.barh(y_pos, distance, align='center', color = colors)
-            ax.set_yticks(y_pos, labels=[horse["number"] for horse in horses])
-            ax.invert_yaxis()
-            ax.set_xlabel('Distance')
-            ax.set_title(f'Race: {race_type}')
-
-            plt.pause(0.001)
-
-
-            """
             Condition de victoire selon si le nombre de vainqueurs dans le tableau winners est inférieur ou supérieur au type de course,
             et si le cheval à une distance inférieure ou égale à zéro.
             """
@@ -150,14 +128,11 @@ def launch_race():
                 if len(winners) >= race_types[race_type]:
                     match race_type:
                         case "trifecta":
-                            print(
-                                f"The winners are {winners[0]["number"]}, {winners[1]["number"]} et {winners[2]["number"]}!")
+                            print(f"The winners are {winners[0]["number"]}, {winners[1]["number"]} et {winners[2]["number"]}!")
                         case "quartet":
-                            print(
-                                f"The winners are {winners[0]["number"]}, {winners[1]["number"]}, {winners[2]["number"]} and {winners[3]["number"]}!")
+                            print(f"The winners are {winners[0]["number"]}, {winners[1]["number"]}, {winners[2]["number"]} and {winners[3]["number"]}!")
                         case "quintet":
-                            print(
-                                f"The winners are {winners[0]["number"]}, {winners[1]["number"]}, {winners[2]["number"]}, {winners[3]["number"]} and {winners[4]["number"]}!")
+                            print(f"The winners are {winners[0]["number"]}, {winners[1]["number"]}, {winners[2]["number"]}, {winners[3]["number"]} and {winners[4]["number"]}!")
 
             """
             Condition qui arrête la boucle si le nombre de gagnants dans le tableau winners
