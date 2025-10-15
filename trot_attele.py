@@ -130,18 +130,25 @@ def launch_race():
             ax.clear()
             y_pos = np.arange(len(horses))
             distance = [horse["dist"] for horse in horses]
-            ax.barh(y_pos, distance, align='center', color = colors)
-            ax.set_yticks(y_pos, labels=[horse["number"] for horse in horses])
+            bars = ax.barh(y_pos, distance, align='center', color = colors)
+            for i, bar in enumerate(bars):
+                width = bar.get_width()
+                speed = horses[i]["speed"]
+                dist = horses[i]["dist"]
+                ax.text(width + 0.5, bar.get_y() + bar.get_height()/2,
+                f"{speed} | {dist} m", va='center', fontsize=9, color='black')
+
+
             ax.invert_yaxis()
             ax.set_xlabel('Distance')
             ax.set_title(f'Race: {race_type}')
 
-            plt.pause(0.001)
+            plt.pause(0.01)
 
 
             """
             Condition de victoire selon si le nombre de vainqueurs dans le tableau winners est inférieur ou supérieur au type de course,
-            et si le cheval à une distance inférieure ou égale à zéro.
+            et si le cheval à une distance supérieure ou égale à 2400.
             """
             if len(winners) < race_types[race_type] and horse not in winners:
                 if horse["dist"] >= 2400:
