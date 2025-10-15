@@ -1,29 +1,34 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""
+Simulation de course de trot attelé
+"""
+
 import random
 import matplotlib.pyplot as plt
 import numpy as np
 
-np.random.seed(19680801)
 
 fig, ax = plt.subplots()
 
 
-""" 
-Retourne le nombre de chevaux à faire participer (entrés par le joueur) 
-"""
+
 def get_number_of_horses():
+    """
+    Retourne le nombre de chevaux à faire participer (entrés par le joueur)
+    """
     return input("Choose the number of horses for this race: ")
 
 
 race_types = {"trifecta": 3, "quartet": 4, "quintet": 5}
 
 
-""" 
-Retourne le type de la course (entré par le joueur) 
-"""
+
 def get_race_type():
+    """
+    Retourne le type de la course (entré par le joueur)
+    """
     while True:
         race_type = input("Choose race type between trifecta, quartet, quintet: ")
         if race_type not in race_types.keys():
@@ -32,20 +37,22 @@ def get_race_type():
         return race_type
 
 
-""" 
-Retourne une liste de tous les chevaux participants (dictionnaires)
-"""
+
 def get_horses_specs():
+    """
+    Retourne une liste de tous les chevaux participants (dictionnaires)
+    """
     horses = []
     for i in range(int(get_number_of_horses())):
         horses.append({"number": i + 1, "dist": 0, "speed": 0})
     return horses
 
 
-""" 
-Fonction principale faisant fonctionner la course
-"""
+
 def launch_race():
+    """
+    Fonction principale faisant fonctionner la course
+    """
     horses = get_horses_specs()
     race_type = get_race_type()
 
