@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
+
 fig, ax = plt.subplots()
 
 
@@ -36,7 +37,7 @@ def get_race_type():
     """
     while True:
         race_type = input("Choose race type between trifecta, quartet, quintet: ")
-        if race_type  in race_types.keys():
+        if race_type in race_types.keys():
             return race_type
         else:
             continue
@@ -115,7 +116,7 @@ def launch_race():
                         horse["speed"] -= 1
                     elif dice == 6:
                         horses.remove(horse)
-                        print(f"Horse number {horse["number"]} is disqualified!")
+                        print(f"Horse number {horse['number']} is disqualified!")
 
             """
             Switch match qui modifie la distance de chaque cheval selon sa vitesse.
@@ -170,19 +171,20 @@ def launch_race():
                     match race_type:
                         case "trifecta":
                             print(
-                                f"The winners are {winners[0]["number"]}, {winners[1]["number"]} et {winners[2]["number"]}!")
+                                f"The winners are {winners[0]['number']}, {winners[1]['number']} et {winners[2]['number']}!")
                         case "quartet":
                             print(
-                                f"The winners are {winners[0]["number"]}, {winners[1]["number"]}, {winners[2]["number"]} and {winners[3]["number"]}!")
+                                f"The winners are {winners[0]['number']}, {winners[1]['number']}, {winners[2]['number']} and {winners[3]['number']}!")
                         case "quintet":
                             print(
-                                f"The winners are {winners[0]["number"]}, {winners[1]["number"]}, {winners[2]["number"]}, {winners[3]["number"]} and {winners[4]["number"]}!")
+                                f"The winners are {winners[0]['number']}, {winners[1]['number']}, {winners[2]['number']}, {winners[3]['number']} and {winners[4]['number']}!")
 
             """
             Condition qui arrête la boucle si le nombre de gagnants dans le tableau winners
             est égal ou supérieur au type de course.
             """
-            if len(winners) >= race_types[race_type]:
+
+            if len(winners) >= race_types[str(race_type)]:
                 break
 
 
