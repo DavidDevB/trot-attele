@@ -17,4 +17,13 @@ Le joueur entre un nombre de chevaux participants à la course, puis le type de 
 - Disqualification des chevaux dépassant l'allure du trot (galop)
 - Visuel graphique de l'avancée dans la course de tous les chevaux (tout par tour)
 
-#### 👨‍💻 Codé avec Python 3
+#### 👨‍💻 Installation
+- Installez Python 3 sur votre machine
+- Téléchargez le fichier trot_attele.py
+- Lancez le script à partir du terminal
+
+#### 🧬 Structure du code
+- def get_number_of_horses()
+- get_race_type()
+- get_horses_specs()
+- launch_race()
