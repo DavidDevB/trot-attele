@@ -36,7 +36,7 @@ def get_race_type():
     Retourne le type de la course (entré par le joueur)
     """
     while True:
-        race_type = input("Choose race type between trifecta, quartet, quintet: ")
+        race_type = input("Choose race type between trifecta, quartet, quintet: ").lower()
         if race_type in race_types.keys():
             return race_type
         else:
