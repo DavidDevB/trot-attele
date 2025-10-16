@@ -10,14 +10,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-
 fig, ax = plt.subplots()
-
 
 
 def get_number_of_horses():
     """
     Retourne le nombre de chevaux à faire participer (entrés par le joueur)
+    :return: int
     """
     while True:
         number_of_horses = input("Choose the number of horses between 12 and 20 for this race: ")
@@ -34,6 +33,7 @@ race_types = {"trifecta": 3, "quartet": 4, "quintet": 5}
 def get_race_type():
     """
     Retourne le type de la course (entré par le joueur)
+    :return: str
     """
     while True:
         race_type = input("Choose race type between trifecta, quartet, quintet: ").lower()
@@ -47,6 +47,7 @@ def get_race_type():
 def get_horses_specs():
     """
     Retourne une liste de tous les chevaux participants (dictionnaires)
+    :return: list[{}]
     """
     horses = []
     for i in range(int(get_number_of_horses())):
@@ -58,6 +59,7 @@ def get_horses_specs():
 def launch_race():
     """
     Fonction principale faisant fonctionner la course
+    :return: None
     """
     horses = get_horses_specs()
     race_type = get_race_type()
@@ -65,62 +67,43 @@ def launch_race():
     winners = []
     colors = [f"#{random.randint(0, 0xFFFFFF):06x}" for _ in horses]
 
-    """
-    Boucle while permettant de boucler jusqu'à qu'il y est le nombre de gagnants indiqués par le type de course,
-    et jusqu'à qu'il n'y ait plus de cheval avec une distance inférieure à 2400.
-    """
+
+    speed_rules = {
+        0: {2: 1, 3: 1, 4: 1, 5: 2, 6: 2},
+        1: {3: 1, 4: 1, 5: 1, 6: 2},
+        2: {3: 1, 4: 1, 5: 1, 6: 2},
+        3: {1: -1, 4: 1, 5: 1, 6: 1},
+        4: {1: -1, 5: 1, 6: 1},
+        5: {1: -2, 2: -1, 6: 1},
+        6: {1: -2, 2: -1, 6: "disqualify"}
+    }
+
+    def update_horse_speed(horse, dice):
+        """
+        Retire un cheval de la liste de chevaux s'il est disqualifié ou change la vitesse d'un cheval
+        :param horse: dict
+        :param dice: int
+        :return: None
+        """
+        rules = speed_rules.get(horse["speed"], {})
+        change = rules.get(dice, 0)
+
+        if change == "disqualify":
+            horses.remove(horse)
+            print(f"Horse number {horse['number']} is disqualified!")
+        else:
+            horse["speed"] += change
+
+
+    # Boucle while permettant de boucler jusqu'à qu'il y est le nombre de gagnants indiqués par le type de course,
+    # et jusqu'à qu'il n'y ait plus de cheval avec une distance inférieure à 2400.
     while len(winners) < race_types[race_type] and any(horse["dist"] < 2400 for horse in horses):
         for horse in horses[:]:
-            dice = random.choice(range(1, 7))
+            dice_throw = random.choice(range(1, 7))
 
-            """
-            Switch match qui modifie la vitesse des chevaux selon le lancer de dé.
-            """
-            match horse["speed"]:
-                case 0:
-                    if dice in [2, 3, 4]:
-                        horse["speed"] += 1
-                    elif dice in [5, 6]:
-                        horse["speed"] += 2
-                case 1:
-                    if dice in [3, 4, 5]:
-                        horse["speed"] += 1
-                    elif dice == 6:
-                        horse["speed"] += 2
-                case 2:
-                    if dice in [3, 4, 5]:
-                        horse["speed"] += 1
-                    elif dice == 6:
-                        horse["speed"] += 2
-                case 3:
-                    if dice == 1:
-                        horse["speed"] -= 1
-                    elif dice in [4, 5, 6]:
-                        horse["speed"] += 1
-                case 4:
-                    if dice == 1:
-                        horse["speed"] -= 1
-                    elif dice in [5, 6]:
-                        horse["speed"] += 1
-                case 5:
-                    if dice == 1:
-                        horse["speed"] -= 2
-                    elif dice == 2:
-                        horse["speed"] -= 1
-                    elif dice == 6:
-                        horse["speed"] += 1
-                case 6:
-                    if dice == 1:
-                        horse["speed"] -= 2
-                    elif dice == 2:
-                        horse["speed"] -= 1
-                    elif dice == 6:
-                        horses.remove(horse)
-                        print(f"Horse number {horse['number']} is disqualified!")
+            update_horse_speed(horse, dice_throw)
 
-            """
-            Switch match qui modifie la distance de chaque cheval selon sa vitesse.
-            """
+            # Switch match qui modifie la distance de chaque cheval selon sa vitesse.
             match horse["speed"]:
                 case 0:
                     continue
@@ -137,9 +120,8 @@ def launch_race():
                 case 6:
                     horse["dist"] += 138
 
-            """
-            Librairie Matplotlib pour rajouter le graphique horizontal
-            """
+
+            # Librairie Matplotlib pour rajouter le graphique horizontal
             ax.clear()
             y_pos = np.arange(len(horses))
             distance = [horse["dist"] for horse in horses]
@@ -159,10 +141,9 @@ def launch_race():
             plt.pause(0.01)
 
 
-            """
-            Condition de victoire selon si le nombre de vainqueurs dans le tableau winners est inférieur ou supérieur au type de course,
-            et si le cheval à une distance supérieure ou égale à 2400.
-            """
+
+            #Condition de victoire selon si le nombre de vainqueurs dans le tableau winners est inférieur ou supérieur au type de course,
+            #et si le cheval à une distance supérieure ou égale à 2400.
             if len(winners) < race_types[race_type] and horse not in winners:
                 if horse["dist"] >= 2400:
                     winners.append(horse)
@@ -179,11 +160,9 @@ def launch_race():
                             print(
                                 f"The winners are {winners[0]['number']}, {winners[1]['number']}, {winners[2]['number']}, {winners[3]['number']} and {winners[4]['number']}!")
 
-            """
-            Condition qui arrête la boucle si le nombre de gagnants dans le tableau winners
-            est égal ou supérieur au type de course.
-            """
 
+            # Condition qui arrête la boucle si le nombre de gagnants dans le tableau winners
+            # est égal ou supérieur au type de course.
             if len(winners) >= race_types[str(race_type)]:
                 break
 
