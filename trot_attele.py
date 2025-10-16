@@ -123,9 +123,11 @@ def launch_race():
 
             # Librairie Matplotlib pour rajouter le graphique horizontal
             ax.clear()
-            y_pos = np.arange(len(horses))
+            y_pos = np.arange(1, len(horses) + 1)
             distance = [horse["dist"] for horse in horses]
             bars = ax.barh(y_pos, distance, align='center', color = colors)
+            ax.set_yticks(y_pos)
+            ax.set_yticklabels([f"Horse {num}" for num in y_pos])
             for i, bar in enumerate(bars):
                 width = bar.get_width()
                 speed = horses[i]["speed"]
@@ -139,7 +141,7 @@ def launch_race():
             ax.set_title(f'Race: {race_type}')
 
             plt.pause(0.01)
-
+            input()
 
 
             #Condition de victoire selon si le nombre de vainqueurs dans le tableau winners est inférieur ou supérieur au type de course,
